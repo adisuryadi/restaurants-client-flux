@@ -7,7 +7,9 @@ var config = require('./webpack.config');
 var server = new WebpackDevServer(webpack(config), {
   publicPath: config.output.publicPath,
   hot: true,
-  proxy: {}
+  proxy: {
+    '/api/v1/*': 'http://localhost:3001/' // express api1
+  }
 });
 
 server.listen(3000, 'localhost', function (err, result) {
