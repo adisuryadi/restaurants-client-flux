@@ -1,6 +1,9 @@
 'use strict';
 
-var React = require('react');
+import React from 'react';
+
+import Toolbar from './components/Toolbar.react.js';
+import ListItems from './components/ListItems.react.js';
 
 class App extends React.Component {
   constructor(props) {
@@ -10,9 +13,16 @@ class App extends React.Component {
 
   render() {
     return (
-      <div>Hello World!</div>
+      <div className="ui center aligned page grid">
+        <div className="twelve wide left aligned column">
+          <div className="main container">
+            <Toolbar />
+            <ListItems />
+          </div>
+        </div>
+      </div>
     );
   }
 }
 
-module.exports = App;
+export default App;
