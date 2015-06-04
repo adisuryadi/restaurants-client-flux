@@ -36,8 +36,12 @@ RestaurantStore.dispatchToken = AppDispatcher.register(function (payload) {
 
   switch (action.type) {
     case 'RECEIVE_BUNDLE':
-      _boroughs = action.bundle.boroughs;
-      _cuisines = action.bundle.cuisines;
+      action.bundle.boroughs.forEach(function (borough) {
+        _boroughs[borough._id] = borough;
+      });
+      action.bundle.cuisines.forEach(function (cuisine) {
+        _cuisines[cuisine._id] = cuisine;
+      });
       RestaurantStore.emitChange();
       break;
   }

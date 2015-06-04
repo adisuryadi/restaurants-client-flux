@@ -5,23 +5,48 @@ import React from 'react';
 import Toolbar from './components/Toolbar.react.js';
 import ListItems from './components/ListItems.react.js';
 
+import RestaurantStore from './storage/RestaurantStore.js'
+import ActionCreators from './actions/ActionCreators.js'
+
+
+function _getStoreState() {
+  return {
+    boroughs: RestaurantStore.getBoroughs(),
+    cuisines: RestaurantStore.getCuisines()
+  }
+}
+
 class App extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = _getStoreState();
+    this._onChange = this._onChange.bind(this);
+  }
+
+  componentWillMount() {
+    RestaurantStore.addChangeListener(this._onChange);
+    ActionCreators.requestBundle();
+  }
+
+  componentWillUnMount() {
+    RestaurantStore.removeChangeListener(this._onChange);
   }
 
   render() {
     return (
-      <div className="ui center aligned page grid">
-        <div className="twelve wide left aligned column">
-          <div className="main container">
-            <Toolbar />
-            <ListItems />
+        <div className="ui center aligned page grid">
+          <div className="twelve wide left aligned column">
+            <div className="main container">
+              <Toolbar boroughs={this.state.boroughs} cuisines={this.state.cuisines} />
+              <ListItems />
+            </div>
           </div>
         </div>
-      </div>
     );
+  }
+
+  _onChange() {
+    this.setState(_getStoreState());
   }
 }
 

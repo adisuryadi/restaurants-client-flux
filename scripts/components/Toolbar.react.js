@@ -1,4 +1,8 @@
-var React = require('react');
+'use strict';
+
+import React from 'react';
+
+import DropDown from './DropDown.react.js'
 
 class Toolbar extends React.Component {
   constructor(props) {
@@ -9,24 +13,8 @@ class Toolbar extends React.Component {
   render() {
     return (
       <div className="ui menu">
-        <div className="ui pointing dropdown link item">
-          <span className="text">Any Cuisine</span><i className="dropdown icon"></i>
-          <div className="menu">
-            <div className="header">Cuisine</div>
-            <div className="item">Any Cuisine</div>
-            <div className="item">Indonesian</div>
-            <div className="item">Vietnamese</div>
-          </div>
-        </div>
-        <div className="ui pointing dropdown link item">
-          <span className="text">Any Area</span><i className="dropdown icon"></i>
-          <div className="menu">
-            <div className="header">Area</div>
-            <div className="item">Any Area</div>
-            <div className="item">Manhattan</div>
-            <div className="item">Queens</div>
-          </div>
-        </div>
+        <DropDown items={this.props.cuisines} title="Cuisine" />
+        <DropDown items={this.props.boroughs} title="Area" />
         <div className="right item">
           <div className="ui transparent icon input">
             <input type="text" placeholder="Search..." />
