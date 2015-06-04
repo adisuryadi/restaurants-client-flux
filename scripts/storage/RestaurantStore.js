@@ -19,6 +19,8 @@ var _cuisines = {
 var _current_borough = { '_id': 'Any Borough' };
 var _current_cuisine = { '_id': 'Any Cuisine' };
 
+var _restaurants = [];
+
 let RestaurantStore = assign({
   emitChange() {
     this.emit(CHANGE_EVENT);
@@ -46,6 +48,10 @@ let RestaurantStore = assign({
 
   getCurrentCuisine() {
     return _current_cuisine;
+  },
+
+  getRestaurants() {
+    return _restaurants;
   }
 }, EventEmitter.prototype);
 
@@ -54,32 +60,37 @@ RestaurantStore.dispatchToken = AppDispatcher.register(function (payload) {
 
   switch (action.type) {
     case 'RECEIVE_BUNDLE':
-      action.bundle.boroughs.forEach(function (borough) {
-        _boroughs[borough._id] = borough;
-      });
-      action.bundle.cuisines.forEach(function (cuisine) {
-        _cuisines[cuisine._id] = cuisine;
-      });
-      RestaurantStore.emitChange();
+        action.bundle.boroughs.forEach(function (borough) {
+          _boroughs[borough._id] = borough;
+        });
+        action.bundle.cuisines.forEach(function (cuisine) {
+          _cuisines[cuisine._id] = cuisine;
+        });
+        RestaurantStore.emitChange();
+      break;
+
+    case 'RECEIVE_RESTAURANTS':
+        _restaurants = action.restaurants;
+        RestaurantStore.emitChange();
       break;
 
     case 'QUERY_FILTER_CHANGE':
-      keys(action.query).map(function (param) {
-        let match = false;
-        switch (param) {
-          case 'cuisine':
-            _current_cuisine = pick(_cuisines, action.query[param])[action.query[param]];
-            match = true;
-            break;
-          case 'borough':
-            _current_borough = pick(_boroughs, action.query[param])[action.query[param]];
-            match = true;
-            break;
-        }
-        if (match) {
-          RestaurantStore.emitChange();
-        }
-      });
+        keys(action.query).map(function (param) {
+          let match = false;
+          switch (param) {
+            case 'cuisine':
+              _current_cuisine = pick(_cuisines, action.query[param])[action.query[param]];
+              match = true;
+              break;
+            case 'borough':
+              _current_borough = pick(_boroughs, action.query[param])[action.query[param]];
+              match = true;
+              break;
+          }
+          if (match) {
+            RestaurantStore.emitChange();
+          }
+        });
       break;
   }
 });

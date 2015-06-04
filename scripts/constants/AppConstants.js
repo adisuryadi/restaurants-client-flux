@@ -7,6 +7,9 @@ export default {
     RECEIVE_BUNDLE: null,
     RECEIVE_BUNDLE_FAILED: null,
 
+    RECEIVE_RESTAURANTS: null,
+    RECEIVE_RESTAURANTS_FAILED: null,
+
     QUERY_FILTER_CHANGE: null
   }),
 

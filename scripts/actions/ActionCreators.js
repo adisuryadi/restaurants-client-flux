@@ -23,6 +23,22 @@ export default {
       console.log(reason);
     });
   },
+
+  requestRestaurantList(filter) {
+    return WebAPIUtils.getRestaurantList(filter).then(function (res) {
+      AppDispatcher.handleServerAction({
+        type: ActionTypes.RECEIVE_RESTAURANTS,
+        restaurants: res.objects
+      });
+    }).catch(function (reason) {
+      AppDispatcher.handleServerAction({
+        type: ActionTypes.RECEIVE_BUNDLE_FAILED,
+        error: reason
+      });
+      console.log(reason)
+    });
+  },
+
   changeQueryFilter(type, id) {
     var query = { [type]: id };
     AppDispatcher.handleViewAction({
@@ -36,5 +52,6 @@ export default {
       cuisine: RestaurantStore.getCurrentCuisine()._id
     };
     router.transitionTo('root', {}, query);
+    this.requestRestaurantList(query);
   }
 };
