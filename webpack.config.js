@@ -6,7 +6,7 @@ module.exports = {
     'webpack/hot/only-dev-server',
     './scripts/index'
   ],
-  devtool: 'inline-source-map',
+  devtool: 'eval',
   output: {
     path: __dirname + '/build',
     publicPath: '/assets/',

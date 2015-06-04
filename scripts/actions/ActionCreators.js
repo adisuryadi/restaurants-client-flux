@@ -7,6 +7,17 @@ import WebAPIUtils from '../utils/WebAPIUtils';
 export default {
   requestBundle() {
     // TODO check if already loaded, before send AJAX request
-    return WebAPIUtils.getBundle();
+    return WebAPIUtils.getBundle().then(function (res) {
+      AppDispatcher.handleServerAction({
+        type: ActionTypes.RECEIVE_BUNDLE,
+        bundle: res
+      });
+    }).catch(function (reason) {
+      AppDispatcher.handleServerAction({
+        type: ActionTypes.RECEIVE_BUNDLE_FAILED,
+        error: reason
+      });
+      console.log(reason);
+    });
   }
 };

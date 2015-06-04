@@ -6,6 +6,9 @@ import AppDispatcher from '../dispatcher/AppDispatcher';
 
 const CHANGE_EVENT = 'change';
 
+let _boroughs = {};
+let _cuisines = {};
+
 let RestaurantStore = assign({
   emitChange() {
     this.emit(CHANGE_EVENT);
@@ -17,6 +20,14 @@ let RestaurantStore = assign({
 
   removeChangeListener(fn) {
     this.removeListener(CHANGE_EVENT, fn);
+  },
+
+  getBoroughs: function () {
+    return _boroughs;
+  },
+
+  getCuisines: function () {
+    return _cuisines;
   }
 }, EventEmitter.prototype);
 
@@ -25,7 +36,9 @@ RestaurantStore.dispatchToken = AppDispatcher.register(function (payload) {
 
   switch (action.type) {
     case 'RECEIVE_BUNDLE':
-      //RestaurantStore.emitChange();
+      _boroughs = action.bundle.boroughs;
+      _cuisines = action.bundle.cuisines;
+      RestaurantStore.emitChange();
       break;
   }
 });
