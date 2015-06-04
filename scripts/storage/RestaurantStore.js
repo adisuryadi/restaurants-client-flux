@@ -1,13 +1,23 @@
 'use strict';
 
-import { assign, each, isFunction } from 'lodash';
+import { assign, each, isFunction, keys, map, pick } from 'lodash';
 import { EventEmitter } from 'events';
 import AppDispatcher from '../dispatcher/AppDispatcher';
 
 const CHANGE_EVENT = 'change';
 
-let _boroughs = {};
-let _cuisines = {};
+var _boroughs = {
+  'Any Borough': {
+    '_id': 'Any Borough'
+  }
+};
+var _cuisines = {
+  'Any Cuisine': {
+    '_id': 'Any Cuisine'
+  }
+};
+var _current_borough = { '_id': 'Any Borough' };
+var _current_cuisine = { '_id': 'Any Cuisine' };
 
 let RestaurantStore = assign({
   emitChange() {
@@ -22,12 +32,20 @@ let RestaurantStore = assign({
     this.removeListener(CHANGE_EVENT, fn);
   },
 
-  getBoroughs: function () {
+  getBoroughs() {
     return _boroughs;
   },
 
-  getCuisines: function () {
+  getCuisines() {
     return _cuisines;
+  },
+
+  getCurrentBorough() {
+    return _current_borough;
+  },
+
+  getCurrentCuisine() {
+    return _current_cuisine;
   }
 }, EventEmitter.prototype);
 
@@ -43,6 +61,25 @@ RestaurantStore.dispatchToken = AppDispatcher.register(function (payload) {
         _cuisines[cuisine._id] = cuisine;
       });
       RestaurantStore.emitChange();
+      break;
+
+    case 'QUERY_FILTER_CHANGE':
+      keys(action.query).map(function (param) {
+        let match = false;
+        switch (param) {
+          case 'cuisine':
+            _current_cuisine = pick(_cuisines, action.query[param])[action.query[param]];
+            match = true;
+            break;
+          case 'borough':
+            _current_borough = pick(_boroughs, action.query[param])[action.query[param]];
+            match = true;
+            break;
+        }
+        if (match) {
+          RestaurantStore.emitChange();
+        }
+      });
       break;
   }
 });

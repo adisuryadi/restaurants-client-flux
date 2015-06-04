@@ -12,7 +12,9 @@ import ActionCreators from './actions/ActionCreators.js'
 function _getStoreState() {
   return {
     boroughs: RestaurantStore.getBoroughs(),
-    cuisines: RestaurantStore.getCuisines()
+    cuisines: RestaurantStore.getCuisines(),
+    current_borough: RestaurantStore.getCurrentBorough(),
+    current_cuisine: RestaurantStore.getCurrentCuisine()
   }
 }
 
@@ -37,7 +39,7 @@ class App extends React.Component {
         <div className="ui center aligned page grid">
           <div className="twelve wide left aligned column">
             <div className="main container">
-              <Toolbar boroughs={this.state.boroughs} cuisines={this.state.cuisines} />
+              <Toolbar {...this.state} />
               <ListItems />
             </div>
           </div>

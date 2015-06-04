@@ -3,6 +3,9 @@
 import AppDispatcher from '../dispatcher/AppDispatcher';
 import { ActionTypes } from '../constants/AppConstants';
 import WebAPIUtils from '../utils/WebAPIUtils';
+import router from '../router.js';
+
+import RestaurantStore from '../storage/RestaurantStore.js'
 
 export default {
   requestBundle() {
@@ -19,5 +22,19 @@ export default {
       });
       console.log(reason);
     });
+  },
+  changeQueryFilter(type, id) {
+    var query = { [type]: id };
+    AppDispatcher.handleViewAction({
+      type: ActionTypes.QUERY_FILTER_CHANGE,
+      query: query
+    });
+
+    // TODO: this is not the way to do it
+    query = {
+      borough: RestaurantStore.getCurrentBorough()._id,
+      cuisine: RestaurantStore.getCurrentCuisine()._id
+    };
+    router.transitionTo('root', {}, query);
   }
 };

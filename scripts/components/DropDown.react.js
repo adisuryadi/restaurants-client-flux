@@ -1,8 +1,9 @@
 'use strict';
 
 import _ from 'lodash';
-import React from 'react';
-import { PropTypes } from 'react';
+import React, { PropTypes } from 'react';
+
+import ActionCreators from '../actions/ActionCreators.js'
 
 class DropDown extends React.Component {
   constructor(props) {
@@ -10,6 +11,7 @@ class DropDown extends React.Component {
     this.state = {
       selected_item: props.selected_item ? props.selected_item : null
     };
+    this.handleClick = this.handleClick.bind(this);
   }
 
   componentDidMount() {
@@ -21,27 +23,32 @@ class DropDown extends React.Component {
     if (this.state.selected_item) {
       selectedItem = <span className="text">{this.state.selected_item._id}</span>;
     } else {
-      selectedItem = <span className="text">Any {this.props.title}</span>;
+      selectedItem = <span className="text">Any {this.props.name}</span>;
     }
 
     return (
         <div className="ui pointing dropdown link item">
           {selectedItem}<i className="dropdown icon"></i>
           <div className="menu">
-            <div className="header">{this.props.title}</div>
+            <div className="header">{this.props.name}</div>
             {_.keys(this.props.items).map((key) => {
+              let id = this.props.items[key]._id;
               return (
-                  <div className="item" key={this.props.items[key]._id}>{this.props.items[key]._id}</div>
+                  <a onClick={_.partial(this.handleClick, id)} className="item" key={id}>{id}</a>
               );
             })}
           </div>
         </div>
     );
   }
+
+  handleClick(id) {
+    ActionCreators.changeQueryFilter(this.props.name, id);
+  }
 }
 
 DropDown.propTypes = {
-  title: PropTypes.string.isRequired,
+  name: PropTypes.string.isRequired,
   items: PropTypes.object.isRequired,
   selected_item: PropTypes.object
 };
