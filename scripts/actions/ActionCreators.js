@@ -12,12 +12,12 @@ export default {
     // TODO check if already loaded, before send AJAX request
     return WebAPIUtils.getBundle().then(function (res) {
       AppDispatcher.handleServerAction({
-        type: ActionTypes.RECEIVE_BUNDLE,
+        type: ActionTypes.LOAD_BUNDLE_SUCCESS,
         bundle: res
       });
     }).catch(function (reason) {
       AppDispatcher.handleServerAction({
-        type: ActionTypes.RECEIVE_BUNDLE_FAILED,
+        type: ActionTypes.LOAD_BUNDLE_FAILED,
         error: reason
       });
       console.log(reason);
@@ -27,12 +27,12 @@ export default {
   requestRestaurantList(filter) {
     return WebAPIUtils.getRestaurantList(filter).then(function (res) {
       AppDispatcher.handleServerAction({
-        type: ActionTypes.RECEIVE_RESTAURANTS,
+        type: ActionTypes.LOAD_RESTAURANTS_SUCCESS,
         restaurants: res.objects
       });
     }).catch(function (reason) {
       AppDispatcher.handleServerAction({
-        type: ActionTypes.RECEIVE_BUNDLE_FAILED,
+        type: ActionTypes.LOAD_RESTAURANTS_FAILED,
         error: reason
       });
       console.log(reason)

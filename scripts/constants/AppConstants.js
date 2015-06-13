@@ -4,11 +4,13 @@ import keyMirror from 'react/lib/keyMirror';
 
 export default {
   ActionTypes: keyMirror({
-    RECEIVE_BUNDLE: null,
-    RECEIVE_BUNDLE_FAILED: null,
+    LOAD_BUNDLE: null,
+    LOAD_BUNDLE_SUCCESS: null,
+    LOAD_BUNDLE_FAILED: null,
 
-    RECEIVE_RESTAURANTS: null,
-    RECEIVE_RESTAURANTS_FAILED: null,
+    LOAD_RESTAURANTS: null,
+    LOAD_RESTAURANTS_SUCCESS: null,
+    LOAD_RESTAURANTS_FAILED: null,
 
     QUERY_FILTER_CHANGE: null
   }),

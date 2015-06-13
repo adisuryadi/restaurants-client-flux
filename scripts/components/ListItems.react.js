@@ -31,16 +31,17 @@ class ListItems extends React.Component {
   render() {
     return (
       <div className="ui divided list">
-        {this.state.items.map(item => {
+        {Object.keys(this.state.items).map((key) => {
+          var item = this.state.items[key];
           return (
-            <div className="item" key={item._id}>
-              <i className="huge map marker icon"></i>
-              <div className="content">
-                <div className="header">{item.name}</div>
-                <div className="description"><span>{item.address.street},&nbsp;<a href="#">{item.borough},&nbsp;</a><a href="#">{item.address.zipcode}</a></span></div>
-                <div className="extra"><a href="#"><em>{item.cuisine}</em></a></div>
+              <div className="item" key={key}>
+                <i className="huge map marker icon"></i>
+                <div className="content">
+                  <div className="header">{item.name}</div>
+                  <div className="description"><span>{item.address.street},&nbsp;<a href="#">{item.borough},&nbsp;</a><a href="#">{item.address.zipcode}</a></span></div>
+                  <div className="extra"><a href="#"><em>{item.cuisine}</em></a></div>
+                </div>
               </div>
-            </div>
           );
         })}
       </div>

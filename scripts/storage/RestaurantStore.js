@@ -1,25 +1,26 @@
 'use strict';
 
-import { assign, each, isFunction, keys, map, pick } from 'lodash';
+import { assign, each, isFunction, keys, map, pick, uniqueId, find, values } from 'lodash';
 import { EventEmitter } from 'events';
 import AppDispatcher from '../dispatcher/AppDispatcher';
 
 const CHANGE_EVENT = 'change';
 
 var _boroughs = {
-  'Any Borough': {
+  '0': {
     '_id': 'Any Borough'
   }
 };
 var _cuisines = {
-  'Any Cuisine': {
+  '0': {
     '_id': 'Any Cuisine'
   }
 };
-var _current_borough = { '_id': 'Any Borough' };
+var _current_borough = { '_id': 'Any Borugh' };
 var _current_cuisine = { '_id': 'Any Cuisine' };
 
-var _restaurants = [];
+var _restaurants = {};
+
 
 let RestaurantStore = assign({
   emitChange() {
@@ -55,23 +56,54 @@ let RestaurantStore = assign({
   }
 }, EventEmitter.prototype);
 
-RestaurantStore.dispatchToken = AppDispatcher.register(function (payload) {
+
+
+AppDispatcher.register(function (payload) {
   const action = payload.action;
 
   switch (action.type) {
-    case 'RECEIVE_BUNDLE':
+    case 'LOAD_BUNDLE_SUCCESS':
+        let exits_boroughs = _.values(_boroughs).map((item) => {return item._id;});
+        let loaded = 0;
+
         action.bundle.boroughs.forEach(function (borough) {
-          _boroughs[borough._id] = borough;
+          if (exits_boroughs.indexOf(borough._id) < 0) {
+            _boroughs[uniqueId()] = borough;
+          } else {
+            // TODO: update borough
+          }
+          loaded += 1;
         });
+
+
+        let exits_cuisines = _.values(_cuisines).map((item) => {return item._id;});
+
         action.bundle.cuisines.forEach(function (cuisine) {
-          _cuisines[cuisine._id] = cuisine;
+          if (exits_cuisines.indexOf(cuisine._id) < 0) {
+            _cuisines[uniqueId()] = cuisine;
+          } else {
+            // TODO: update borough
+          }
+          loaded += 1;
         });
-        RestaurantStore.emitChange();
+
+        if (loaded) {
+          RestaurantStore.emitChange();
+        }
       break;
 
-    case 'RECEIVE_RESTAURANTS':
-        _restaurants = action.restaurants;
-        RestaurantStore.emitChange();
+    case 'LOAD_RESTAURANTS_SUCCESS':
+        let loaded = 0;
+
+        _restaurants = {};
+        action.restaurants.forEach(function (restaurant) {
+          _restaurants[restaurant._id] = restaurant;
+          loaded += 1;
+        });
+
+        if (loaded) {
+          RestaurantStore.emitChange();
+        }
       break;
 
     case 'QUERY_FILTER_CHANGE':
@@ -79,11 +111,11 @@ RestaurantStore.dispatchToken = AppDispatcher.register(function (payload) {
           let match = false;
           switch (param) {
             case 'cuisine':
-              _current_cuisine = pick(_cuisines, action.query[param])[action.query[param]];
+              _current_cuisine = find(values(_cuisines), (item) => { return item._id === action.query[param] });
               match = true;
               break;
             case 'borough':
-              _current_borough = pick(_boroughs, action.query[param])[action.query[param]];
+              _current_borough = find(values(_boroughs), (item) => { return item._id === action.query[param] });
               match = true;
               break;
           }
