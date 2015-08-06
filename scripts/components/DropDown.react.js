@@ -1,6 +1,5 @@
 'use strict';
 
-import _ from 'lodash';
 import React, { PropTypes } from 'react';
 
 import ActionCreators from '../actions/ActionCreators.js'
@@ -31,10 +30,10 @@ class DropDown extends React.Component {
           {selectedItem}<i className="dropdown icon"></i>
           <div className="menu">
             <div className="header">{this.props.name}</div>
-            {_.keys(this.props.items).map((key) => {
+            {Object.keys(this.props.items).map((key) => {
               let id = this.props.items[key]._id;
               return (
-                  <a onClick={_.partial(this.handleClick, id)} className="item" key={id}>{id}</a>
+                  <a onClick={() => { this.handleClick(id); }} className="item" key={id}>{id}</a>
               );
             })}
           </div>

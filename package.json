@@ -23,7 +23,6 @@
     "babel-runtime": "^5.8.20",
     "core-js": "^1.0.1",
     "flux": "^2.0.3",
-    "lodash": "^3.9.3",
     "react": "^0.13.3",
     "react-router": "^0.13.3",
     "superagent": "^1.2.0"

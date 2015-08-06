@@ -1,10 +1,20 @@
 'use strict';
 
-import { assign, each, isFunction, keys, map, pick, uniqueId, find, values } from 'lodash';
 import { EventEmitter } from 'events';
 import AppDispatcher from '../dispatcher/AppDispatcher';
 
 const CHANGE_EVENT = 'change';
+
+//  TODO: move this to helper module.
+let _idx = 0;
+/**
+ * Return autoincremented number on every calls
+ * @return {Number}
+ */
+function uniqueId() {
+  _idx += 1;
+  return _idx;
+}
 
 var _boroughs = {
   '0': {
@@ -22,7 +32,7 @@ var _current_cuisine = { '_id': 'Any Cuisine' };
 var _restaurants = {};
 
 
-let RestaurantStore = assign({
+let RestaurantStore = Object.assign({
   emitChange() {
     this.emit(CHANGE_EVENT);
   },
@@ -63,7 +73,7 @@ AppDispatcher.register(function (payload) {
 
   switch (action.type) {
     case 'LOAD_BUNDLE_SUCCESS':
-        let exits_boroughs = _.values(_boroughs).map((item) => {return item._id;});
+        let exits_boroughs = Object.values(_boroughs).map((item) => {return item._id;});
         let loaded = 0;
 
         action.bundle.boroughs.forEach(function (borough) {
@@ -76,7 +86,7 @@ AppDispatcher.register(function (payload) {
         });
 
 
-        let exits_cuisines = _.values(_cuisines).map((item) => {return item._id;});
+        let exits_cuisines = Object.values(_cuisines).map((item) => {return item._id;});
 
         action.bundle.cuisines.forEach(function (cuisine) {
           if (exits_cuisines.indexOf(cuisine._id) < 0) {
@@ -107,15 +117,17 @@ AppDispatcher.register(function (payload) {
       break;
 
     case 'QUERY_FILTER_CHANGE':
-        keys(action.query).map(function (param) {
+       Object.keys(action.query).map(function (param) {
           let match = false;
           switch (param) {
             case 'cuisine':
-              _current_cuisine = find(values(_cuisines), (item) => { return item._id === action.query[param] });
+              const values = Object.values(_cuisines);
+              _current_cuisine = values.find(item => (item._id === action.query[param]));
               match = true;
               break;
             case 'borough':
-              _current_borough = find(values(_boroughs), (item) => { return item._id === action.query[param] });
+              const values = Object.values(_boroughs);
+              _current_borough = values.find(item => (item._id === action.query[param]));
               match = true;
               break;
           }

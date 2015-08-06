@@ -1,6 +1,5 @@
 'use strict';
 
-import { isObject } from 'lodash';
 import request from 'superagent';
 import { prefix } from '../config/site.config.js';
 
@@ -19,8 +18,7 @@ let WebAPIUtils = {
           });
     });
   },
-  getRestaurantList(filter) {
-    filter = isObject(filter) ? filter : {};
+  getRestaurantList(filter = {}) {
     return new Promise(function (resolve, reject) {
       request
           .get(prefix + '/restaurant')
