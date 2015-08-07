@@ -1,13 +1,9 @@
-'use strict';
-
-import React, { PropTypes } from 'react';
-
-import RestaurantStore from '../storage/RestaurantStore.js'
-import ActionCreators from '../actions/ActionCreators.js'
+import React from 'react';
+import RestaurantStore from '../storage/RestaurantStore.js';
 
 function _getStoreState() {
   return {
-    items: RestaurantStore.getRestaurants()
+    items: RestaurantStore.getRestaurants(),
   };
 }
 
@@ -15,7 +11,7 @@ class ListItems extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      items: []
+      items: [],
     };
     this._onChange = this._onChange.bind(this);
   }
@@ -27,12 +23,12 @@ class ListItems extends React.Component {
   componentWillUnmount() {
     RestaurantStore.removeChangeListener(this._onChange);
   }
-  
+
   render() {
     return (
       <div className="ui divided list">
         {Object.keys(this.state.items).map((key) => {
-          var item = this.state.items[key];
+          const item = this.state.items[key];
           return (
               <div className="item" key={key}>
                 <i className="huge map marker icon"></i>
@@ -49,7 +45,7 @@ class ListItems extends React.Component {
   }
 
   _onChange() {
-    this.setState(_getStoreState());    
+    this.setState(_getStoreState());
   }
 }
 

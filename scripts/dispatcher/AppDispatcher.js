@@ -1,24 +1,22 @@
-'use strict';
-
 import { Dispatcher } from 'flux';
 import Constants from '../constants/AppConstants';
 
 const PayloadSources = Constants.PayloadSources;
 
-let AppDispatcher = new Dispatcher();
+const AppDispatcher = new Dispatcher();
 
-AppDispatcher.handleViewAction = function (action) {
-  let payload = {
+AppDispatcher.handleViewAction = function handleViewAction(action) {
+  const payload = {
     source: PayloadSources.VIEW_ACTION,
-    action: action
+    action: action,
   };
   this.dispatch(payload);
 };
 
-AppDispatcher.handleServerAction = function (action) {
-  let payload = {
+AppDispatcher.handleServerAction = function handleServerAction(action) {
+  const payload = {
     source: PayloadSources.SERVER_ACTION,
-    action: action
+    action: action,
   };
   this.dispatch(payload);
 };

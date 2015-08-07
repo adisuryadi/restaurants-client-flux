@@ -1,14 +1,11 @@
-'use strict';
-
 import React, { PropTypes } from 'react';
-
-import ActionCreators from '../actions/ActionCreators.js'
+import ActionCreators from '../actions/ActionCreators.js';
 
 class DropDown extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      selected_item: props.selected_item ? props.selected_item : null
+      selected_item: props.selected_item ? props.selected_item : null,
     };
     this.handleClick = this.handleClick.bind(this);
   }
@@ -18,7 +15,7 @@ class DropDown extends React.Component {
   }
 
   render() {
-    var selectedItem;
+    let selectedItem;
     if (this.state.selected_item) {
       selectedItem = <span className="text">{this.state.selected_item._id}</span>;
     } else {
@@ -31,7 +28,7 @@ class DropDown extends React.Component {
           <div className="menu">
             <div className="header">{this.props.name}</div>
             {Object.keys(this.props.items).map((key) => {
-              let id = this.props.items[key]._id;
+              const id = this.props.items[key]._id;
               return (
                   <a onClick={() => { this.handleClick(id); }} className="item" key={id}>{id}</a>
               );
@@ -49,7 +46,7 @@ class DropDown extends React.Component {
 DropDown.propTypes = {
   name: PropTypes.string.isRequired,
   items: PropTypes.object.isRequired,
-  selected_item: PropTypes.object
+  selected_item: PropTypes.object,
 };
 
 export default DropDown;

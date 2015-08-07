@@ -1,38 +1,44 @@
-'use strict';
-
 import { EventEmitter } from 'events';
 import AppDispatcher from '../dispatcher/AppDispatcher';
 
 const CHANGE_EVENT = 'change';
 
 //  TODO: move this to helper module.
-let _idx = 0;
+let idx = 0;
 /**
  * Return autoincremented number on every calls
  * @return {Number}
  */
 function uniqueId() {
-  _idx += 1;
-  return _idx;
+  idx += 1;
+  return idx;
 }
 
-var _boroughs = {
+/**
+ * There seems a bug on eslint that not detects
+ * these two variables below is being used in this page.
+ */
+/*  eslint-disable prefer-const */
+let boroughs = {
   '0': {
-    '_id': 'Any Borough'
-  }
+    '_id': 'Any Borough',
+  },
 };
-var _cuisines = {
+let cuisines = {
   '0': {
-    '_id': 'Any Cuisine'
-  }
+    '_id': 'Any Cuisine',
+  },
 };
-var _current_borough = { '_id': 'Any Borugh' };
-var _current_cuisine = { '_id': 'Any Cuisine' };
+/*  eslint-enable prefer-const */
 
-var _restaurants = {};
+//  Defaults
+let currentBorough = {'_id': 'Any Borugh'};
+let currentCuisine = {'_id': 'Any Cuisine'};
+
+let restaurants = {};
 
 
-let RestaurantStore = Object.assign({
+const RestaurantStore = Object.assign({
   emitChange() {
     this.emit(CHANGE_EVENT);
   },
@@ -46,96 +52,97 @@ let RestaurantStore = Object.assign({
   },
 
   getBoroughs() {
-    return _boroughs;
+    return boroughs;
   },
 
   getCuisines() {
-    return _cuisines;
+    return cuisines;
   },
 
   getCurrentBorough() {
-    return _current_borough;
+    return currentBorough;
   },
 
   getCurrentCuisine() {
-    return _current_cuisine;
+    return currentCuisine;
   },
 
   getRestaurants() {
-    return _restaurants;
-  }
+    return restaurants;
+  },
 }, EventEmitter.prototype);
 
 
-
-AppDispatcher.register(function (payload) {
+AppDispatcher.register(payload => {
   const action = payload.action;
+  let loaded;
 
   switch (action.type) {
-    case 'LOAD_BUNDLE_SUCCESS':
-        let exits_boroughs = Object.values(_boroughs).map((item) => {return item._id;});
-        let loaded = 0;
+  case 'LOAD_BUNDLE_SUCCESS':
+    const exitsBoroughs = Object.values(boroughs).map(item => item._id);
+    loaded = 0;
 
-        action.bundle.boroughs.forEach(function (borough) {
-          if (exits_boroughs.indexOf(borough._id) < 0) {
-            _boroughs[uniqueId()] = borough;
-          } else {
-            // TODO: update borough
-          }
-          loaded += 1;
-        });
+    action.bundle.boroughs.forEach(borough => {
+      if (exitsBoroughs.indexOf(borough._id) < 0) {
+        boroughs[uniqueId()] = borough;
+      }
+      loaded += 1;
+    });
 
 
-        let exits_cuisines = Object.values(_cuisines).map((item) => {return item._id;});
+    const exitsCuisines = Object.values(cuisines).map(item => {
+      return item._id;
+    });
 
-        action.bundle.cuisines.forEach(function (cuisine) {
-          if (exits_cuisines.indexOf(cuisine._id) < 0) {
-            _cuisines[uniqueId()] = cuisine;
-          } else {
-            // TODO: update borough
-          }
-          loaded += 1;
-        });
+    action.bundle.cuisines.forEach(cuisine => {
+      if (exitsCuisines.indexOf(cuisine._id) < 0) {
+        cuisines[uniqueId()] = cuisine;
+      }
+      loaded += 1;
+    });
 
-        if (loaded) {
-          RestaurantStore.emitChange();
-        }
-      break;
+    if (loaded) {
+      RestaurantStore.emitChange();
+    }
+    break;
 
-    case 'LOAD_RESTAURANTS_SUCCESS':
-        let loaded = 0;
+  case 'LOAD_RESTAURANTS_SUCCESS':
+    loaded = 0;
 
-        _restaurants = {};
-        action.restaurants.forEach(function (restaurant) {
-          _restaurants[restaurant._id] = restaurant;
-          loaded += 1;
-        });
+    restaurants = {};
+    action.restaurants.forEach(restaurant => {
+      restaurants[restaurant._id] = restaurant;
+      loaded += 1;
+    });
 
-        if (loaded) {
-          RestaurantStore.emitChange();
-        }
-      break;
+    if (loaded) {
+      RestaurantStore.emitChange();
+    }
+    break;
 
-    case 'QUERY_FILTER_CHANGE':
-       Object.keys(action.query).map(function (param) {
-          let match = false;
-          switch (param) {
-            case 'cuisine':
-              const values = Object.values(_cuisines);
-              _current_cuisine = values.find(item => (item._id === action.query[param]));
-              match = true;
-              break;
-            case 'borough':
-              const values = Object.values(_boroughs);
-              _current_borough = values.find(item => (item._id === action.query[param]));
-              match = true;
-              break;
-          }
-          if (match) {
-            RestaurantStore.emitChange();
-          }
-        });
-      break;
+  case 'QUERY_FILTER_CHANGE':
+    Object.keys(action.query).map(param => {
+      let match = false;
+      let items;
+      switch (param) {
+      case 'cuisine':
+        items = Object.values(cuisines);
+        currentCuisine = items.find(item => (item._id === action.query[param]));
+        match = true;
+        break;
+      case 'borough':
+        items = Object.values(boroughs);
+        currentBorough = items.find(item => (item._id === action.query[param]));
+        match = true;
+        break;
+      default:
+      }
+      if (match) {
+        RestaurantStore.emitChange();
+      }
+    });
+    break;
+  default:
   }
 });
 

@@ -1,8 +1,5 @@
-'use strict';
-
-import React from 'react';
-
-import DropDown from './DropDown.react.js'
+import React, { PropTypes } from 'react';
+import DropDown from './DropDown.react.js';
 
 class Toolbar extends React.Component {
   constructor(props) {
@@ -30,5 +27,12 @@ class Toolbar extends React.Component {
     );
   }
 }
+
+Toolbar.propTypes = {
+  cuisines: PropTypes.object.isRequired,
+  current_cuisine: PropTypes.object.isRequired,
+  boroughs: PropTypes.object.isRequired,
+  current_borough: PropTypes.object.isRequired,
+};
 
 export default Toolbar;

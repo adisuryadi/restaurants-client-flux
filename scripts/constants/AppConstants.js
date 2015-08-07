@@ -1,5 +1,3 @@
-'use strict';
-
 import keyMirror from 'react/lib/keyMirror';
 
 export default {
@@ -12,11 +10,11 @@ export default {
     LOAD_RESTAURANTS_SUCCESS: null,
     LOAD_RESTAURANTS_FAILED: null,
 
-    QUERY_FILTER_CHANGE: null
+    QUERY_FILTER_CHANGE: null,
   }),
 
   PayloadSources: keyMirror({
     SERVER_ACTION: null,
-    VIEW_ACTION: null
-  })
+    VIEW_ACTION: null,
+  }),
 };

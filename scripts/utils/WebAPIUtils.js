@@ -1,15 +1,13 @@
-'use strict';
-
 import request from 'superagent';
 import { prefix } from '../config/site.config.js';
 
-let WebAPIUtils = {
+const WebAPIUtils = {
   getBundle() {
-    return new Promise(function (resolve, reject) {
+    return new Promise((resolve, reject) => {
       request
           .get(prefix + '/get_bundle')
           .set('Content-Type', 'application/vnd.api+json')
-          .end(function (err, res) {
+          .end((err, res) => {
             if (res.ok) {
               resolve(JSON.parse(res.text));
             } else {
@@ -19,12 +17,12 @@ let WebAPIUtils = {
     });
   },
   getRestaurantList(filter = {}) {
-    return new Promise(function (resolve, reject) {
+    return new Promise((resolve, reject) => {
       request
           .get(prefix + '/restaurant')
           .query(filter)
           .set('Content-Type', 'application/vnd.api+json')
-          .end(function (err, res) {
+          .end((err, res) => {
             if (res.ok) {
               resolve(JSON.parse(res.text));
             } else {
@@ -32,7 +30,7 @@ let WebAPIUtils = {
             }
           });
     });
-  }
+  },
 };
 
 export default WebAPIUtils;

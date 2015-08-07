@@ -1,21 +1,16 @@
-'use strict';
-
 import React from 'react';
-
 import Toolbar from './components/Toolbar.react.js';
 import ListItems from './components/ListItems.react.js';
-
-import RestaurantStore from './storage/RestaurantStore.js'
-import ActionCreators from './actions/ActionCreators.js'
-
+import RestaurantStore from './storage/RestaurantStore.js';
+import ActionCreators from './actions/ActionCreators.js';
 
 function _getStoreState() {
   return {
     boroughs: RestaurantStore.getBoroughs(),
     cuisines: RestaurantStore.getCuisines(),
     current_borough: RestaurantStore.getCurrentBorough(),
-    current_cuisine: RestaurantStore.getCurrentCuisine()
-  }
+    current_cuisine: RestaurantStore.getCurrentCuisine(),
+  };
 }
 
 class App extends React.Component {
@@ -30,10 +25,6 @@ class App extends React.Component {
     ActionCreators.requestBundle();
   }
 
-  componentWillUnMount() {
-    RestaurantStore.removeChangeListener(this._onChange);
-  }
-
   render() {
     return (
         <div className="ui center aligned page grid">
@@ -45,6 +36,10 @@ class App extends React.Component {
           </div>
         </div>
     );
+  }
+
+  componentWillUnMount() {
+    RestaurantStore.removeChangeListener(this._onChange);
   }
 
   _onChange() {
